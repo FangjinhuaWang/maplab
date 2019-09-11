@@ -45,6 +45,9 @@ struct ViProblemOptions {
 OptimizationProblem* constructViProblem(
     const vi_map::MissionIdSet& mission_ids, const ViProblemOptions& options,
     vi_map::VIMap* map);
+OptimizationProblem* constructViProblem_submap(
+    const vi_map::MissionIdSet& mission_ids, const ViProblemOptions& options,
+    vi_map::VIMap* map);
 
 }  // namespace map_optimization
 #endif  // MAP_OPTIMIZATION_VI_OPTIMIZATION_BUILDER_H_

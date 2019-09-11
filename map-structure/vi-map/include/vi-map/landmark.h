@@ -108,7 +108,11 @@ class Landmark {
       predicate);
 
   void removeAllObservationsOfVertex(const pose_graph::VertexId& vertex_id);
-
+  void setNewKeypointIndex(
+      const pose_graph::VertexId& vertex_id, unsigned int frame_idx,
+      unsigned int new_keypoint_index);
+  void removeAllObservationsOfVertexNotGiven(
+      const pose_graph::VertexIdList& vertex_id);
   void removeAllObservationsOfVertexAndFrame(
       const pose_graph::VertexId& vertex_id, unsigned int frame_idx);
 
@@ -135,6 +139,8 @@ class Landmark {
 
   const KeypointIdentifierList& getObservations() const;
 
+  void setObservations(const KeypointIdentifierList& observation);
+
   unsigned int numberOfObservations() const;
 
   bool hasObservations() const;
@@ -155,6 +161,8 @@ class Landmark {
   // Set the appearance for a given observation index. Allocates the appearance,
   // if it has not been allocated yet.
   void setAppearance(size_t observation_index, int appearance);
+
+  void setAppearances(std::vector<int>& appearances);
 
   // Returns a set of all distinct appearances existing for this landmark.
   void getAllDistinctAppearances(

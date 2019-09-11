@@ -1,9 +1,9 @@
 #include "vi-map/vertex.h"
 
+#include <algorithm>
+#include <glog/logging.h>
 #include <string>
 #include <unordered_set>
-
-#include <glog/logging.h>
 
 #include <aslam-serialization/visual-frame-serialization.h>
 #include <aslam/common/hash-id.h>
@@ -499,6 +499,13 @@ void Vertex::addObservedLandmarkId(
   observed_landmark_ids_[frame_idx].push_back(landmark_id);
 }
 
+//
+void Vertex::setObservedLandmarks(
+    const std::vector<vi_map::LandmarkIdList>& observed_landmark_ids) {
+  observed_landmark_ids_ = observed_landmark_ids;
+}
+//
+
 size_t Vertex::observedLandmarkIdsSize(unsigned int frame_idx) const {
   CHECK(isFrameIndexValid(frame_idx));
   return observed_landmark_ids_[frame_idx].size();
@@ -758,6 +765,32 @@ void Vertex::getAllObservedLandmarkIds(
   CHECK_NOTNULL(landmark_ids)->clear();
   *landmark_ids = observed_landmark_ids_;
 }
+
+//
+std::vector<LandmarkIdList>& Vertex::getAllObservedLandmarkIds() {
+  return observed_landmark_ids_;
+}
+
+void Vertex::deleteAllObservedLandmarkIdsNotGiven(
+    LandmarkIdList& landmark_ids) {
+  for (unsigned int frame_idx = 0u; frame_idx < numFrames(); ++frame_idx) {
+    LandmarkIdList& frame_landmark = observed_landmark_ids_[frame_idx];
+
+    LandmarkIdList::iterator landmark_iterator = frame_landmark.begin();
+
+    while (landmark_iterator != frame_landmark.end()) {
+      if (std::find(
+              landmark_ids.begin(), landmark_ids.end(), *landmark_iterator) ==
+          landmark_ids.end()) {
+        landmark_iterator = frame_landmark.erase(landmark_iterator);
+
+      } else {
+        ++landmark_iterator;
+      }
+    }
+  }
+}
+//
 
 void Vertex::forEachKeypoint(
     const std::function<void(const KeypointIdentifier&)>& action) const {

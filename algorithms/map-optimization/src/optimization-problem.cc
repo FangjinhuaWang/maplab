@@ -92,7 +92,14 @@ OptimizationProblem::OptimizationProblem(
   local_parameterizations_.quaternion_parameterization.reset(
       new ceres_error_terms::JplQuaternionParameterization);
 }
-
+void OptimizationProblem::applyGaugeFixesForGivenVertex(
+    const pose_graph::VertexId vertex_id, const vi_map::MissionId mission_id) {
+  fixOpenDoFOfInitialVertex(
+      state_buffer_.get_vertex_q_IM__M_p_MI_JPL(vertex_id),
+      state_buffer_.get_baseframe_q_GM__G_p_GM_JPL(
+          map_->getMissionBaseFrameForMission(mission_id).id()),
+      FixedRotationDoF::kYaw, true, &problem_information_);
+}
 void OptimizationProblem::applyGaugeFixesForInitialVertices(
     const std::vector<MissionClusterGaugeFixes>& new_cluster_fixes) {
   CHECK_EQ(new_cluster_fixes.size(), mission_coobservation_clusters_.size());

@@ -108,6 +108,30 @@ void Landmark::removeAllObservationsOfVertex(
   removeAllObservationsAccordingToPredicate(predicate);
 }
 
+//
+void Landmark::setNewKeypointIndex(
+    const pose_graph::VertexId& vertex_id, unsigned int frame_idx,
+    unsigned int new_keypoint_index) {
+  for (KeypointIdentifier& observation : observations_) {
+    if (observation.frame_id.vertex_id == vertex_id &&
+        observation.frame_id.frame_index == frame_idx) {
+      observation.keypoint_index = new_keypoint_index;
+    }
+  }
+}
+
+void Landmark::removeAllObservationsOfVertexNotGiven(
+    const pose_graph::VertexIdList& vertex_id) {
+  std::function<bool(const KeypointIdentifier& observation)>  // NOLINT
+      predicate = [&](const KeypointIdentifier& observation) {
+        return (
+            std::find(
+                vertex_id.begin(), vertex_id.end(),
+                observation.frame_id.vertex_id) == vertex_id.end());
+      };
+  removeAllObservationsAccordingToPredicate(predicate);
+}
+//
 void Landmark::removeAllObservationsOfVertexAndFrame(
     const pose_graph::VertexId& vertex_id, unsigned int frame_idx) {
   std::function<bool(const KeypointIdentifier& observation)> // NOLINT
@@ -142,6 +166,10 @@ unsigned int Landmark::numberOfObservations() const {
 
 bool Landmark::hasObservations() const {
   return !observations_.empty();
+}
+
+void Landmark::setObservations(const KeypointIdentifierList& observation) {
+  observations_ = observation;
 }
 
 void Landmark::forEachObservation(
@@ -189,7 +217,11 @@ void Landmark::setAppearance(size_t observation_index, int appearance) {
 
   appearances_[observation_index] = appearance;
 }
-
+//
+void Landmark::setAppearances(std::vector<int>& appearances) {
+  appearances_ = appearances;
+}
+//
 void Landmark::allocateAppearances() {
   CHECK(appearances_.empty()) << "Appearances have already been allocated.";
   appearances_.resize(observations_.size(), kInvalidAppearance);

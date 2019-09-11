@@ -516,6 +516,23 @@ class VIMap : public backend::ResourceMap,
 
   void duplicateMission(const vi_map::MissionId& source_mission_id);
 
+  void clone_representative(
+      const pose_graph::VertexIdList& representative_ids,
+      std::unordered_map<pose_graph::VertexId, pose_graph::VertexId>*
+          source_to_dest_vertex_id_map);
+
+  void ensure_consistency(
+      const std::vector<pose_graph::VertexIdList>& partitioning,
+      std::unordered_map<pose_graph::VertexId, pose_graph::VertexId>&
+          source_to_dest_vertex_id_map);
+
+  void build_missions_from_partition(
+      const std::vector<pose_graph::VertexIdList>& partitioning,
+      std::unordered_map<pose_graph::VertexId, pose_graph::VertexId>&
+          source_to_dest_vertex_id_map,
+      vi_map::MissionIdList* new_missions,
+      const vi_map::MissionIdList& original_mission_ids);
+
   // Removes references to the mission object - assumes mission is empty.
   void removeMissionObject(
       const vi_map::MissionId& mission_id, bool remove_baseframe);

@@ -133,6 +133,8 @@ class Vertex : public pose_graph::Vertex {
       const KeypointIdentifier& keypoint_id, const LandmarkId& landmark_id);
   void setObservedLandmarkId(
       unsigned int frame_idx, int keypoint_idx, const LandmarkId& landmark_id);
+  void setObservedLandmarks(
+      const std::vector<vi_map::LandmarkIdList>& observed_landmark_ids);
   size_t observedLandmarkIdsSize(unsigned int frame_idx) const;
   int numValidObservedLandmarkIds(unsigned int frame_idx) const;
   int numValidObservedLandmarkIdsInAllFrames() const;
@@ -143,6 +145,8 @@ class Vertex : public pose_graph::Vertex {
   void getAllObservedLandmarkIds(LandmarkIdList* landmark_ids) const;
   void getAllObservedLandmarkIds(
       std::vector<LandmarkIdList>* landmark_ids) const;
+  std::vector<LandmarkIdList>& getAllObservedLandmarkIds();
+  void deleteAllObservedLandmarkIdsNotGiven(LandmarkIdList& landmark_ids);
 
   // Calls action on each possible keypoint identifier in this vertex.
   void forEachKeypoint(

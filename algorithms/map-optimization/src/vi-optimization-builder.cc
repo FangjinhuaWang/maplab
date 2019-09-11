@@ -133,4 +133,63 @@ OptimizationProblem* constructViProblem(
   return problem;
 }
 
+OptimizationProblem* constructViProblem_submap(
+    const vi_map::MissionIdSet& mission_ids, const ViProblemOptions& options,
+    vi_map::VIMap* map) {
+  CHECK(map);
+  CHECK(options.isValid());
+
+  LOG_IF(
+      FATAL,
+      !options.add_visual_constraints && !options.add_inertial_constraints)
+      << "Either enable visual or inertial constraints; otherwise don't call "
+      << "this function.";
+
+  OptimizationProblem* problem = new OptimizationProblem(map, mission_ids);
+  if (options.add_visual_constraints) {
+    addVisualTerms(
+        options.fix_landmark_positions, options.fix_intrinsics,
+        options.fix_extrinsics_rotation, options.fix_extrinsics_translation,
+        options.min_landmarks_per_frame, problem);
+  }
+  if (options.add_inertial_constraints) {
+    addInertialTerms(
+        options.fix_gyro_bias, options.fix_accel_bias, options.fix_velocity,
+        options.gravity_magnitude, problem);
+  }
+
+  // Fixing open DoF of the visual(-inertial) problem. We assume that if there
+  // is inertial data, that all missions will have them.
+  const bool visual_only =
+      options.add_visual_constraints && !options.add_inertial_constraints;
+
+  // Determine and apply the gauge fixes.
+  MissionClusterGaugeFixes fixes_of_mission_cluster;
+
+  fixes_of_mission_cluster.position_dof_fixed = true;
+  fixes_of_mission_cluster.rotation_dof_fixed = FixedRotationDoF::kAll;
+  fixes_of_mission_cluster.scale_fixed = false;
+
+  const size_t num_clusters = problem->getMissionCoobservationClusters().size();
+  std::vector<MissionClusterGaugeFixes> vi_cluster_fixes(
+      num_clusters, fixes_of_mission_cluster);
+
+  // Merge with already applied fixes (if necessary).
+  const std::vector<MissionClusterGaugeFixes>* already_applied_cluster_fixes =
+      problem->getAppliedGaugeFixesForInitialVertices();
+  if (already_applied_cluster_fixes) {
+    std::vector<MissionClusterGaugeFixes> merged_fixes;
+    mergeGaugeFixes(
+        vi_cluster_fixes, *already_applied_cluster_fixes, &merged_fixes);
+    problem->applyGaugeFixesForInitialVertices(merged_fixes);
+  } else {
+    problem->applyGaugeFixesForInitialVertices(vi_cluster_fixes);
+  }
+
+  // Baseframes are fixed in the non mission-alignment problems.
+  fixAllBaseframesInProblem(problem);
+
+  return problem;
+}
+
 }  // namespace map_optimization

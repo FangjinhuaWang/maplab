@@ -1,0 +1,27 @@
+label: "CLA dataset RA-L - 23016 turtlebot factory"
+id: 412eab8e4058621f7036b5e765dfe813
+cameras:
+- camera:
+    label: cam0
+    id: 54812562fa109c40fe90b29a59dd7795
+    line-delay-nanoseconds: 0
+    image_height: 480
+    image_width: 752
+    type: pinhole
+    intrinsics:
+      cols: 1
+      rows: 4
+      data: [472.2863830700696, 470.83759684346785, 368.8316828103749, 232.23688706965652]
+    distortion:
+      type: equidistant
+      parameters:
+        cols: 1
+        rows: 4
+        data: [-0.005740195474458931, 0.02878252863739417, -0.04010621197185408, 0.02008469575876223]
+  T_B_C:
+    cols: 4
+    rows: 4
+    data: [0.99992185, -0.01241689, -0.00145542,  0.03661314,
+           0.01242827,  0.99989004,  0.00809021, -0.01027102,
+           0.0013548,  -0.00810766,  0.99996621, -0.00654466,
+           0.0, 0.0, 0.0, 1.0]

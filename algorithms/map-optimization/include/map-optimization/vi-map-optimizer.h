@@ -39,6 +39,42 @@ class VIMapOptimizer {
           outlier_rejection_options,
       vi_map::VIMap* map);
 
+  bool optimizeVisualInertial(
+      const map_optimization::ViProblemOptions& options,
+      const vi_map::MissionIdSet& missions_to_optimize,
+      const map_optimization::OutlierRejectionSolverOptions* const
+          outlier_rejection_options,
+      vi_map::VIMap* map, const pose_graph::VertexId& representative_id,
+      const pose_graph::VertexId& next_representative_id,
+      double* covariance_next_representative);
+
+  bool optimizeVisualInertial(
+      const map_optimization::ViProblemOptions& options,
+      const ceres::Solver::Options& solver_options,
+      const vi_map::MissionIdSet& missions_to_optimize,
+      const map_optimization::OutlierRejectionSolverOptions* const
+          outlier_rejection_options,
+      vi_map::VIMap* map, const pose_graph::VertexId& representative_id,
+      const pose_graph::VertexId& next_representative_id,
+      double* covariance_next_representative);
+
+  bool optimizeVisualInertial(
+      const map_optimization::ViProblemOptions& options,
+      const vi_map::MissionIdSet& missions_to_optimize,
+      const map_optimization::OutlierRejectionSolverOptions* const
+          outlier_rejection_options,
+      vi_map::VIMap* map, const pose_graph::VertexId& next_representative_id,
+      const vi_map::MissionId& new_mission);
+
+  bool optimizeVisualInertial(
+      const map_optimization::ViProblemOptions& options,
+      const ceres::Solver::Options& solver_options,
+      const vi_map::MissionIdSet& missions_to_optimize,
+      const map_optimization::OutlierRejectionSolverOptions* const
+          outlier_rejection_options,
+      vi_map::VIMap* map, const pose_graph::VertexId& next_representative_id,
+      const vi_map::MissionId& new_mission);
+
  private:
   visualization::ViwlsGraphRvizPlotter* plotter_;
   bool signal_handler_enabled_;

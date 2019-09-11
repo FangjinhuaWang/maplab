@@ -30,6 +30,8 @@ class OptimizationProblem {
   // cluster.
   void applyGaugeFixesForInitialVertices(
       const std::vector<MissionClusterGaugeFixes>& new_cluster_fixes);
+  void applyGaugeFixesForGivenVertex(
+      const pose_graph::VertexId vertex_id, const vi_map::MissionId mission_id);
   // Returns nullptr if none set.
   const std::vector<MissionClusterGaugeFixes>*
   getAppliedGaugeFixesForInitialVertices() const {
