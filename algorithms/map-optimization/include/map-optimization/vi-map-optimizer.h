@@ -44,9 +44,11 @@ class VIMapOptimizer {
       const vi_map::MissionIdSet& missions_to_optimize,
       const map_optimization::OutlierRejectionSolverOptions* const
           outlier_rejection_options,
-      vi_map::VIMap* map, const pose_graph::VertexId& representative_id,
+      vi_map::VIMap* map,
+      const pose_graph::VertexId& representative_id,
       const pose_graph::VertexId& next_representative_id,
-      double* covariance_next_representative);
+      double* covariance_next_representative,
+      bool fix_rotation_all);
 
   bool optimizeVisualInertial(
       const map_optimization::ViProblemOptions& options,
@@ -54,16 +56,19 @@ class VIMapOptimizer {
       const vi_map::MissionIdSet& missions_to_optimize,
       const map_optimization::OutlierRejectionSolverOptions* const
           outlier_rejection_options,
-      vi_map::VIMap* map, const pose_graph::VertexId& representative_id,
+      vi_map::VIMap* map,
+      const pose_graph::VertexId& representative_id,
       const pose_graph::VertexId& next_representative_id,
-      double* covariance_next_representative);
+      double* covariance_next_representative,
+      bool fix_rotation_all);
 
   bool optimizeVisualInertial(
       const map_optimization::ViProblemOptions& options,
       const vi_map::MissionIdSet& missions_to_optimize,
       const map_optimization::OutlierRejectionSolverOptions* const
           outlier_rejection_options,
-      vi_map::VIMap* map, const pose_graph::VertexId& next_representative_id,
+      vi_map::VIMap* map,
+      const pose_graph::VertexId& next_representative_id,
       const vi_map::MissionId& new_mission);
 
   bool optimizeVisualInertial(
@@ -72,7 +77,8 @@ class VIMapOptimizer {
       const vi_map::MissionIdSet& missions_to_optimize,
       const map_optimization::OutlierRejectionSolverOptions* const
           outlier_rejection_options,
-      vi_map::VIMap* map, const pose_graph::VertexId& next_representative_id,
+      vi_map::VIMap* map,
+      const pose_graph::VertexId& next_representative_id,
       const vi_map::MissionId& new_mission);
 
  private:
